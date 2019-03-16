@@ -1,25 +1,25 @@
 Vue.component('product-details', {
     props: {
-      details: {
-        type: Array,
-        required: true
-      }
+        details: {
+            type: Array,
+            required: true
+        }
     },
     template: `
       <ul>
         <li v-for="detail in details">{{ detail }}</li>
       </ul>
     `
-  })
-  
+})
+
 
 Vue.component('product', {
-props:{
-    premium:{
-        type: Boolean,
-        required: true
-    }
-},
+    props: {
+        premium: {
+            type: Boolean,
+            required: true
+        }
+    },
     template: `
     <div class="product">
 <div class="product-image">
@@ -45,9 +45,7 @@ props:{
         Add to Cart</button>
     <button @click="removeFromCart">Remove from cart</button>
 
-    <div class="cart">
-        <p>Cart({{cart}})</p>
-    </div>
+
 
 </div>
 
@@ -76,20 +74,20 @@ props:{
                 }
             ],
 
-            cart: 0,
+
             onSale: true
         }
     },
     methods: {
         addToCart: function () {
-            this.cart += 1;
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
         },
         updateProduct: function (index) {
             this.selectedVariant = index;
 
         },
         removeFromCart() {
-            this.cart -= 1;
+            this.$emit('remove-cart',this.variants[this.selectedVariant].variantId)
         }
     },
     computed: {
@@ -108,9 +106,9 @@ props:{
             }
             return this.brand + ' ' + this.product + ' are not on sale'
         },
-        shipping(){
-            if(this.premium){
-                return  "Free"
+        shipping() {
+            if (this.premium) {
+                return "Free"
             }
             return "2.99"
         }
@@ -123,6 +121,22 @@ props:{
 var app = new Vue({
     el: '#app',
     data: {
-        premium: true
+        premium: true,
+        cart: []
+    },
+    methods: {
+        updatecart(id) {
+            this.cart.push(id)
+        },
+        resta(id){
+            for(var i = this.cart.length - 1; i >= 0; i--) {
+                if (this.cart[i] === id) {
+                   this.cart.splice(i, 1);
+                }
+            }
+            
+        }
+
     }
+
 })
